@@ -16,6 +16,12 @@ public class IPManagementServiceUtils {
 
     public static final Logger logger = Logger.getLogger(IPManagementServiceUtils.class);
 
+    /**
+     * This method will calculate the available no of ip between lower bound & upper bound ip addresses.
+     * @param lowerBound
+     * @param upperBound
+     * @return
+     */
     public int calculateCapacity(String lowerBound, String upperBound) {
         logger.info("Capacity calculator has been invoked..");
         int lower_Bound = 0;
@@ -27,6 +33,11 @@ public class IPManagementServiceUtils {
         return (upper_Bound - lower_Bound);
     }
 
+    /**
+     * this method will accept ip address as parameter and convert into octet.
+     * @param ipAddress
+     * @return
+     */
     private int calculator(String ipAddress) {
         logger.info("Convert IPADDRESS in octet");
         int result = 0;
@@ -39,6 +50,15 @@ public class IPManagementServiceUtils {
         return result;
     }
 
+    /**
+     * This method will check if provided IP address is in defined IP range or not. Method will
+     * return true/false based on input parameter.
+     *
+     * @param lowerBound
+     * @param upperBound
+     * @param rangeIPAddress
+     * @return
+     */
     public boolean isIPAddressInRange(String lowerBound, String upperBound, String rangeIPAddress) {
         logger.info("isIPAddressInRange() has been invoked");
 
@@ -55,6 +75,15 @@ public class IPManagementServiceUtils {
         return false;
     }
 
+    /**
+     * This method will generate no of IP based on lower bound and upper bound Ip address.
+     *
+     * @param lowerBound
+     * @param upperBound
+     * @param noOfIP
+     * @return
+     * @throws AddressStringException
+     */
     public List<String> getRequestedNoOfIpFromGivenRange(String lowerBound, String upperBound, int noOfIP) throws AddressStringException {
         logger.info("getRequestedNoOfIpFromGivenRange() has been invoked");
 

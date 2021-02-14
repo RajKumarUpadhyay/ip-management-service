@@ -30,6 +30,8 @@ public class IpManagementService {
     IPManagementServiceUtils ipManagementServiceUtils;
 
     /**
+     * This method has been designed to generate and reserve the IP into IP Address table. This method will generate
+     * requested no. of IP from specified pool id in request and return as list of IP address as response.
      *
      * @param ipAddressReserveRequest
      * @return
@@ -81,16 +83,20 @@ public class IpManagementService {
     }
 
     /**
+     * this method will reserve the IP address if request IP address has not been blacklisted or reserved in the POOL and
+     * validate the IP range from pool if the ip within range. If above specified condition has not been matched then it
+     * throw error response to the client.
      *
      * @param ipAddressReserveRequest
      * @return
      * @throws AddressStringException
      */
     public String reserveIPAddress(IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
+        logger.info("reserveIPAddress() has been invoked");
         Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressReserveRequest.getIpPoolId());
 
         validateIPAddressReservationRequest(ipPool, ipAddressReserveRequest);
-
+        logger.info("find IP Address in table if exist...");
         Optional<IPAddress> ipAddress = ipAddressRepository.findByValue(ipAddressReserveRequest.getIpAddress().get());
 
         if(ipAddress.isPresent()) {
@@ -99,15 +105,16 @@ public class IpManagementService {
             else if (ipAddress.get().getResourceState().equalsIgnoreCase(String.valueOf(ResourceState.BLACKLISTED)))
                 throw new IPReservationFailedException("Requested IP: "+ipAddress.get().getValue()+ " has been BLACKLISTED!");
         }
+        logger.info("Reserved IP ..."+ipAddress.get().getValue());
         ipAddress.get().setResourceState(ResourceState.RESERVED.name());
 
         ipAddressRepository.save(ipAddress.get());
-
+        logger.info("IP Address has been reserved ..."+ipAddress.get().getValue());
         return ipAddress.get().getValue();
     }
 
     /**
-     *
+     * This method will validate ip address reservation request based on multiple criteria.
      * @param ipPool
      * @param ipAddressReserveRequest
      */
