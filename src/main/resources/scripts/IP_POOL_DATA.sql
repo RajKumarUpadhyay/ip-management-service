@@ -1,3 +1,0 @@
-INSERT INTO IP_POOL VALUES (1, 'Static - IP Block 1', 0,0, '10.70.26.1', '10.70.26.100');
-INSERT INTO IP_POOL VALUES (2, 'Static - IP Block 2', 0,0, '10.70.25.0', '10.70.25.255');
-INSERT INTO IP_POOL VALUES (3, 'Dynamic - IP Block 3', 0,0, '10.50.0.0', '10.50.255.255');

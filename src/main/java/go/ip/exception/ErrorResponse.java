@@ -11,5 +11,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ErrorResponse {
     private String errorMessage;
+    private Throwable cause;
     private LocalDate currentDate = LocalDate.now();
 }

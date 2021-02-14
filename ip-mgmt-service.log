@@ -1,0 +1,74 @@
+2021-02-14 17:18:32,744 [main] INFO  (IPManagementServiceUtils.java:20) - Capacity calculator has been invoked..
+2021-02-14 17:18:32,745 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:32,746 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.1 in octet: 172366337
+2021-02-14 17:18:32,746 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:32,746 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.100 in octet: 172366436
+2021-02-14 17:18:32,776 [main] INFO  (IpManagementServiceApplication.java:43) - Added first pool entry : IPPool(Id=1, description=Static - IP Block 1, totalCapacity=99, usedCapacity=0, lowerBound=10.70.26.1, upperBound=10.70.26.100)
+2021-02-14 17:18:32,776 [main] INFO  (IPManagementServiceUtils.java:20) - Capacity calculator has been invoked..
+2021-02-14 17:18:32,776 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:32,776 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.25.0 in octet: 172366080
+2021-02-14 17:18:32,777 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:32,777 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.25.255 in octet: 172366335
+2021-02-14 17:18:32,778 [main] INFO  (IpManagementServiceApplication.java:52) - Added second pool entry : IPPool(Id=2, description=Static - IP Block 2, totalCapacity=255, usedCapacity=0, lowerBound=10.70.25.0, upperBound=10.70.25.255)
+2021-02-14 17:18:32,778 [main] INFO  (IPManagementServiceUtils.java:20) - Capacity calculator has been invoked..
+2021-02-14 17:18:32,778 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:32,778 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.50.0.0 in octet: 171048960
+2021-02-14 17:18:32,778 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:32,779 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.50.255.255 in octet: 171114495
+2021-02-14 17:18:32,779 [main] INFO  (IpManagementServiceApplication.java:61) - Added third pool entry : IPPool(Id=1, description=Static - IP Block 1, totalCapacity=99, usedCapacity=0, lowerBound=10.70.26.1, upperBound=10.70.26.100)
+2021-02-14 17:18:39,764 [http-nio-8080-exec-1] INFO  (IpAddressMgmtController.java:31) - Generate And Reserve IPAddress method has been invoked with the request parameter: IPAddressReserveRequest(noOfIpAddress=Optional[10], ipPoolId=1, ipAddress=null)
+2021-02-14 17:18:39,766 [http-nio-8080-exec-1] INFO  (IpManagementService.java:40) - Fetch pool information based on pool id...
+2021-02-14 17:18:39,784 [http-nio-8080-exec-1] INFO  (IpManagementService.java:42) - Fetch reserved IP Address information based on IP Address table based on pool id if exist..
+2021-02-14 17:18:39,895 [http-nio-8080-exec-1] INFO  (IpManagementService.java:45) - validateIPAddressReservationRequest() method has been invoked for validation pool and request...
+2021-02-14 17:18:39,896 [http-nio-8080-exec-1] INFO  (IpManagementService.java:48) - Sort reserved IP Address for generate next sequence of IP Address from Pool...
+2021-02-14 17:18:39,896 [http-nio-8080-exec-1] INFO  (IpManagementService.java:64) - lowerBound for fetch next available IP range with defined pool
+2021-02-14 17:18:39,896 [http-nio-8080-exec-1] INFO  (IPManagementServiceUtils.java:59) - getRequestedNoOfIpFromGivenRange() has been invoked
+2021-02-14 17:18:39,896 [http-nio-8080-exec-1] INFO  (IPManagementServiceUtils.java:61) - lowerBound: 10.70.26.1 upperBound: 10.70.26.100 noOfIP: 10
+2021-02-14 17:18:40,001 [http-nio-8080-exec-1] INFO  (IPManagementServiceUtils.java:80) - Request No. Of IP's From defined pool is : [10.70.26.2, 10.70.26.3, 10.70.26.4, 10.70.26.5, 10.70.26.6, 10.70.26.7, 10.70.26.8, 10.70.26.9, 10.70.26.10, 10.70.26.11]
+2021-02-14 17:18:40,008 [http-nio-8080-exec-1] INFO  (IpManagementService.java:66) - persist all genegrate ip into IP Address table with pool id as a reference...
+2021-02-14 17:18:40,034 [http-nio-8080-exec-1] INFO  (IpManagementService.java:75) - Update capacity of pool..
+2021-02-14 17:18:43,067 [http-nio-8080-exec-3] INFO  (IpAddressMgmtController.java:38) - Reserve IPAddress method has been invoked with the request parameter: IPAddressReserveRequest(noOfIpAddress=null, ipPoolId=1, ipAddress=Optional[10.70.600.2])
+2021-02-14 17:18:43,092 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:43) - isIPAddressInRange() has been invoked
+2021-02-14 17:18:43,092 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:43,092 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.1 in octet: 172366337
+2021-02-14 17:18:43,092 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:43,092 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.100 in octet: 172366436
+2021-02-14 17:18:43,093 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:18:43,093 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.600.2 in octet: 172382210
+2021-02-14 17:19:49,953 [main] INFO  (IPManagementServiceUtils.java:20) - Capacity calculator has been invoked..
+2021-02-14 17:19:49,954 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:49,954 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.1 in octet: 172366337
+2021-02-14 17:19:49,954 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:49,954 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.100 in octet: 172366436
+2021-02-14 17:19:49,992 [main] INFO  (IpManagementServiceApplication.java:43) - Added first pool entry : IPPool(Id=1, description=Static - IP Block 1, totalCapacity=99, usedCapacity=0, lowerBound=10.70.26.1, upperBound=10.70.26.100)
+2021-02-14 17:19:49,992 [main] INFO  (IPManagementServiceUtils.java:20) - Capacity calculator has been invoked..
+2021-02-14 17:19:49,992 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:49,992 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.25.0 in octet: 172366080
+2021-02-14 17:19:49,992 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:49,992 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.25.255 in octet: 172366335
+2021-02-14 17:19:49,994 [main] INFO  (IpManagementServiceApplication.java:52) - Added second pool entry : IPPool(Id=2, description=Static - IP Block 2, totalCapacity=255, usedCapacity=0, lowerBound=10.70.25.0, upperBound=10.70.25.255)
+2021-02-14 17:19:49,994 [main] INFO  (IPManagementServiceUtils.java:20) - Capacity calculator has been invoked..
+2021-02-14 17:19:49,994 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:49,994 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.50.0.0 in octet: 171048960
+2021-02-14 17:19:49,994 [main] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:49,995 [main] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.50.255.255 in octet: 171114495
+2021-02-14 17:19:49,996 [main] INFO  (IpManagementServiceApplication.java:61) - Added third pool entry : IPPool(Id=1, description=Static - IP Block 1, totalCapacity=99, usedCapacity=0, lowerBound=10.70.26.1, upperBound=10.70.26.100)
+2021-02-14 17:19:51,867 [http-nio-8080-exec-2] INFO  (IpAddressMgmtController.java:31) - Generate And Reserve IPAddress method has been invoked with the request parameter: IPAddressReserveRequest(noOfIpAddress=Optional[10], ipPoolId=1, ipAddress=null)
+2021-02-14 17:19:51,868 [http-nio-8080-exec-2] INFO  (IpManagementService.java:40) - Fetch pool information based on pool id...
+2021-02-14 17:19:51,881 [http-nio-8080-exec-2] INFO  (IpManagementService.java:42) - Fetch reserved IP Address information based on IP Address table based on pool id if exist..
+2021-02-14 17:19:51,958 [http-nio-8080-exec-2] INFO  (IpManagementService.java:45) - validateIPAddressReservationRequest() method has been invoked for validation pool and request...
+2021-02-14 17:19:51,958 [http-nio-8080-exec-2] INFO  (IpManagementService.java:48) - Sort reserved IP Address for generate next sequence of IP Address from Pool...
+2021-02-14 17:19:51,958 [http-nio-8080-exec-2] INFO  (IpManagementService.java:64) - lowerBound for fetch next available IP range with defined pool
+2021-02-14 17:19:51,958 [http-nio-8080-exec-2] INFO  (IPManagementServiceUtils.java:59) - getRequestedNoOfIpFromGivenRange() has been invoked
+2021-02-14 17:19:51,958 [http-nio-8080-exec-2] INFO  (IPManagementServiceUtils.java:61) - lowerBound: 10.70.26.1 upperBound: 10.70.26.100 noOfIP: 10
+2021-02-14 17:19:52,047 [http-nio-8080-exec-2] INFO  (IPManagementServiceUtils.java:80) - Request No. Of IP's From defined pool is : [10.70.26.2, 10.70.26.3, 10.70.26.4, 10.70.26.5, 10.70.26.6, 10.70.26.7, 10.70.26.8, 10.70.26.9, 10.70.26.10, 10.70.26.11]
+2021-02-14 17:19:52,048 [http-nio-8080-exec-2] INFO  (IpManagementService.java:66) - persist all genegrate ip into IP Address table with pool id as a reference...
+2021-02-14 17:19:52,064 [http-nio-8080-exec-2] INFO  (IpManagementService.java:75) - Update capacity of pool..
+2021-02-14 17:19:57,506 [http-nio-8080-exec-3] INFO  (IpAddressMgmtController.java:38) - Reserve IPAddress method has been invoked with the request parameter: IPAddressReserveRequest(noOfIpAddress=null, ipPoolId=1, ipAddress=Optional[10.70.600.2])
+2021-02-14 17:19:57,532 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:43) - isIPAddressInRange() has been invoked
+2021-02-14 17:19:57,532 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:57,532 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.1 in octet: 172366337
+2021-02-14 17:19:57,532 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:57,533 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.26.100 in octet: 172366436
+2021-02-14 17:19:57,533 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:31) - Convert IPADDRESS in octet
+2021-02-14 17:19:57,533 [http-nio-8080-exec-3] INFO  (IPManagementServiceUtils.java:38) - Converted IPADDRESS 10.70.600.2 in octet: 172382210
