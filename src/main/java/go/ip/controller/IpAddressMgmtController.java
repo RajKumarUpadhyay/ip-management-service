@@ -1,9 +1,12 @@
 package go.ip.controller;
 
-import go.ip.common.IPAddressReserveRequest;
-import go.ip.common.IPAddressReserveResponse;
+import go.ip.common.GenerateIPAddressAndReserveRequest;
+import go.ip.common.IPAddressRequest;
+import go.ip.common.IPAddressResponse;
+import go.ip.common.ReserveOrBlacklistOrFreeIPAddressRequest;
 import go.ip.services.IpManagementService;
 import inet.ipaddr.AddressStringException;
+import io.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/ip-mgmt-service")
+@Api
 public class IpAddressMgmtController {
 
     public static final Logger logger = Logger.getLogger(IpAddressMgmtController.class);
@@ -22,39 +26,67 @@ public class IpAddressMgmtController {
     @Autowired
     private IpManagementService ipManagementService;
 
-    @RequestMapping(path = "/generateAndReserveIPAddress")
-    @GetMapping
-    public ResponseEntity<List<String>> generateAndReserveIPAddress(@RequestBody IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
+    @PostMapping(path = "/generateAndReserveIPAddress")
+    public ResponseEntity<List<String>> generateAndReserveIPAddress(@RequestBody GenerateIPAddressAndReserveRequest generateIPAddressAndReserveRequest) throws AddressStringException {
 
-        logger.info("Generate And Reserve IPAddress method has been invoked with the request parameter: " + ipAddressReserveRequest.toString());
-        return new ResponseEntity(ipManagementService.generateAndReserveIPAddress(ipAddressReserveRequest), HttpStatus.OK);
+        logger.info("Build request for generate IP address from specified pool..");
+
+        IPAddressRequest ipAddressRequest = new IPAddressRequest();
+        ipAddressRequest.setIpPoolId(generateIPAddressAndReserveRequest.getIpPoolId());
+        ipAddressRequest.setNoOfIpAddress(java.util.Optional.of(generateIPAddressAndReserveRequest.getNoOfIpAddress()));
+
+        logger.info("Generate And Reserve IPAddress method has been invoked with the request parameter: " + ipAddressRequest.toString());
+        return new ResponseEntity(ipManagementService.generateAndReserveIPAddress(ipAddressRequest), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/reserveIPAddress")
-    @PutMapping
-    public ResponseEntity<String> reserveIPAddress(@RequestBody IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
-        logger.info("Reserve IPAddress method has been invoked with the request parameter: " + ipAddressReserveRequest.toString());
-        return new ResponseEntity(ipManagementService.reserveIPAddress(ipAddressReserveRequest), HttpStatus.OK);
+    @PutMapping(path = "/reserveIPAddress")
+    public ResponseEntity<String> reserveIPAddress(@RequestBody ReserveOrBlacklistOrFreeIPAddressRequest reserveOrBlacklistOrFreeIPAddressRequest) throws AddressStringException {
+
+        logger.info("Build request for reserve IP address from specified pool..");
+
+        IPAddressRequest ipAddressRequest = new IPAddressRequest();
+        ipAddressRequest.setIpPoolId(reserveOrBlacklistOrFreeIPAddressRequest.getIpPoolId());
+        ipAddressRequest.setIpAddress(java.util.Optional.of(reserveOrBlacklistOrFreeIPAddressRequest.getIpAddress()));
+
+        logger.info("Reserve IPAddress method has been invoked with the request parameter: " + ipAddressRequest.toString());
+        return new ResponseEntity(ipManagementService.reserveIPAddress(ipAddressRequest), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/blacklistIPAddress")
-    @PutMapping
-    public ResponseEntity<String> blacklistIPAddress(@RequestBody IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
-        logger.info("Blacklist IPAddress method has been invoked with the request parameter: " + ipAddressReserveRequest.toString());
-        return new ResponseEntity(ipManagementService.blacklistIPAddress(ipAddressReserveRequest), HttpStatus.OK);
+    @PutMapping(path = "/blacklistIPAddress")
+    public ResponseEntity<String> blacklistIPAddress(@RequestBody ReserveOrBlacklistOrFreeIPAddressRequest reserveOrBlacklistOrFreeIPAddressRequest) throws AddressStringException {
+
+        logger.info("Build request for blacklist IP address from specified pool..");
+
+        IPAddressRequest ipAddressRequest = new IPAddressRequest();
+        ipAddressRequest.setIpPoolId(reserveOrBlacklistOrFreeIPAddressRequest.getIpPoolId());
+        ipAddressRequest.setIpAddress(java.util.Optional.of(reserveOrBlacklistOrFreeIPAddressRequest.getIpAddress()));
+
+        logger.info("Blacklist IPAddress method has been invoked with the request parameter: " + ipAddressRequest.toString());
+        return new ResponseEntity(ipManagementService.blacklistIPAddress(ipAddressRequest), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/freeIPAddress")
-    @PutMapping
-    public ResponseEntity<String> freeIPAddress(@RequestBody IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
-        logger.info("Free IPAddress method has been invoked with the request parameter: " + ipAddressReserveRequest.toString());
-        return new ResponseEntity(ipManagementService.freeIPAddress(ipAddressReserveRequest), HttpStatus.OK);
+    @PutMapping(path = "/freeIPAddress")
+    public ResponseEntity<String> freeIPAddress(@RequestBody ReserveOrBlacklistOrFreeIPAddressRequest reserveOrBlacklistOrFreeIPAddressRequest) throws AddressStringException {
+
+        logger.info("Build request for free IP address from specified pool..");
+
+        IPAddressRequest ipAddressRequest = new IPAddressRequest();
+        ipAddressRequest.setIpPoolId(reserveOrBlacklistOrFreeIPAddressRequest.getIpPoolId());
+        ipAddressRequest.setIpAddress(java.util.Optional.of(reserveOrBlacklistOrFreeIPAddressRequest.getIpAddress()));
+
+        logger.info("Free IPAddress method has been invoked with the request parameter: " + ipAddressRequest.toString());
+        return new ResponseEntity(ipManagementService.freeIPAddress(ipAddressRequest), HttpStatus.OK);
     }
 
-    @RequestMapping(path = "/getIPInfo")
-    @GetMapping
-    public ResponseEntity<IPAddressReserveResponse> getIPInfo(@RequestBody IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
-        logger.info("Free IPAddress method has been invoked with the request parameter: " + ipAddressReserveRequest.toString());
-        return new ResponseEntity(ipManagementService.getIpInfo(ipAddressReserveRequest), HttpStatus.OK);
+    @PostMapping(path = "/getIPInfo")
+    public ResponseEntity<IPAddressResponse> getIPInfo(@RequestBody ReserveOrBlacklistOrFreeIPAddressRequest reserveOrBlacklistOrFreeIPAddressRequest) throws AddressStringException {
+        logger.info("Build request for get info of the IP address from specified pool..");
+
+        IPAddressRequest ipAddressRequest = new IPAddressRequest();
+        ipAddressRequest.setIpPoolId(reserveOrBlacklistOrFreeIPAddressRequest.getIpPoolId());
+        ipAddressRequest.setIpAddress(java.util.Optional.of(reserveOrBlacklistOrFreeIPAddressRequest.getIpAddress()));
+
+        logger.info("Free IPAddress method has been invoked with the request parameter: " + ipAddressRequest.toString());
+        return new ResponseEntity(ipManagementService.getIpInfo(ipAddressRequest), HttpStatus.OK);
     }
 }

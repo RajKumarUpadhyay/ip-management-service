@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IPAddressReserveResponse {
+public class IPAddressResponse {
     private IPAddress ipAddress;
     private IPPool ipPool;
 }

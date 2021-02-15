@@ -1,7 +1,7 @@
 package go.ip.services;
 
-import go.ip.common.IPAddressReserveRequest;
-import go.ip.common.IPAddressReserveResponse;
+import go.ip.common.IPAddressRequest;
+import go.ip.common.IPAddressResponse;
 import go.ip.common.ResourceState;
 import go.ip.entities.IPAddress;
 import go.ip.entities.IPPool;
@@ -34,19 +34,19 @@ public class IpManagementService {
      * This method has been designed to generate and reserve the IP into IP Address table. This method will generate
      * requested no. of IP from specified pool id in request and return as list of IP address as response.
      *
-     * @param ipAddressReserveRequest
+     * @param ipAddressRequest
      * @return
      * @throws AddressStringException
      */
-    public List<String> generateAndReserveIPAddress(IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
+    public List<String> generateAndReserveIPAddress(IPAddressRequest ipAddressRequest) throws AddressStringException {
 
         logger.info("Fetch pool information based on pool id...");
-        Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressReserveRequest.getIpPoolId());
+        Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressRequest.getIpPoolId());
         logger.info("Fetch reserved IP Address information based on IP Address table based on pool id if exist..");
-        Optional<List<IPAddress>> reservedIPAddress = ipAddressRepository.findAllByipPoolIdOrderByValueDesc(ipAddressReserveRequest.getIpPoolId());
+        Optional<List<IPAddress>> reservedIPAddress = ipAddressRepository.findAllByipPoolIdOrderByValueDesc(ipAddressRequest.getIpPoolId());
 
         logger.info("validateIPAddressReservationRequest() method has been invoked for validation pool and request...");
-        validateIPAddressReservationRequest(ipPool, ipAddressReserveRequest);
+        validateIPAddressReservationRequest(ipPool, ipAddressRequest);
 
         logger.info("Sort reserved IP Address for generate next sequence of IP Address from Pool...");
         if (reservedIPAddress.isPresent() && reservedIPAddress.get().size() > 0) {
@@ -65,18 +65,18 @@ public class IpManagementService {
 
         String lowerBound = reservedIPAddress.isPresent() && reservedIPAddress.get().size() > 0 ? reservedIPAddress.get().get(reservedIPAddress.get().size() -1).getValue(): ipPool.get().getLowerBound();
         logger.info("lowerBound for fetch next available IP range with defined pool");
-        List<String> requestedNoOfIpAddress = ipManagementServiceUtils.getRequestedNoOfIpFromGivenRange(lowerBound, ipPool.get().getUpperBound(), ipAddressReserveRequest.getNoOfIpAddress().get());
-        logger.info("persist all genegrate ip into IP Address table with pool id as a reference...");
+        List<String> requestedNoOfIpAddress = ipManagementServiceUtils.getRequestedNoOfIpFromGivenRange(lowerBound, ipPool.get().getUpperBound(), ipAddressRequest.getNoOfIpAddress().get());
+        logger.info("persist all generated ip into the IP Address table with pool id as a reference...");
         requestedNoOfIpAddress.forEach(ip -> {
             IPAddress ipAddress = new IPAddress();
-            ipAddress.setIpPoolId(ipAddressReserveRequest.getIpPoolId());
+            ipAddress.setIpPoolId(ipAddressRequest.getIpPoolId());
             ipAddress.setResourceState(ResourceState.RESERVED.name());
             ipAddress.setValue(ip);
             ipAddressRepository.save(ipAddress);
         });
 
         logger.info("Update capacity of pool..");
-        ipPool.get().setUsedCapacity(ipPool.get().getUsedCapacity() + ipAddressReserveRequest.getNoOfIpAddress().get());
+        ipPool.get().setUsedCapacity(ipPool.get().getUsedCapacity() + ipAddressRequest.getNoOfIpAddress().get());
 
         ipPoolRepositiory.save(ipPool.get());
 
@@ -88,13 +88,13 @@ public class IpManagementService {
      * validate the IP range from pool if the ip within range. If above specified condition has not been matched then it
      * throw error response to the client.
      *
-     * @param ipAddressReserveRequest
+     * @param ipAddressRequest
      * @return
      * @throws AddressStringException
      */
-    public String reserveIPAddress(IPAddressReserveRequest ipAddressReserveRequest) throws AddressStringException {
+    public String reserveIPAddress(IPAddressRequest ipAddressRequest) throws AddressStringException {
         logger.info("reserveIPAddress() has been invoked");
-        Optional<IPAddress> ipAddress = processAllTypeOfIPAddressRequest(ipAddressReserveRequest);
+        Optional<IPAddress> ipAddress = processAllTypeOfIPAddressRequest(ipAddressRequest);
         if(ipAddress.isPresent()) {
             if (ipAddress.get().getResourceState().equalsIgnoreCase(String.valueOf(ResourceState.RESERVED)))
                 throw new IPReservationFailedException("Requested IP: "+ipAddress.get().getValue()+ " has been RESERVED!");
@@ -109,8 +109,13 @@ public class IpManagementService {
         return ipAddress.get().getValue();
     }
 
-    public String blacklistIPAddress(IPAddressReserveRequest ipAddressReserveRequest) {
-        Optional<IPAddress> ipAddress = processAllTypeOfIPAddressRequest(ipAddressReserveRequest);
+    /**
+     * This method will blacklist given IP Address. This will blacklist only non-reserved IP Could be blacklist.
+     * @param ipAddressRequest
+     * @return
+     */
+    public String blacklistIPAddress(IPAddressRequest ipAddressRequest) {
+        Optional<IPAddress> ipAddress = processAllTypeOfIPAddressRequest(ipAddressRequest);
         if(ipAddress.isPresent()) {
             if (ipAddress.get().getResourceState().equalsIgnoreCase(String.valueOf(ResourceState.RESERVED)))
                 throw new IPReservationFailedException("Requested IP Address: "+ipAddress.get().getValue()+ "  for blacklisting has RESERVED state! Can't blacklist the IP until it's the state has not been changed.");
@@ -125,8 +130,13 @@ public class IpManagementService {
         return ipAddress.get().getValue();
     }
 
-    public String freeIPAddress(IPAddressReserveRequest ipAddressReserveRequest) {
-        Optional<IPAddress> ipAddress = processAllTypeOfIPAddressRequest(ipAddressReserveRequest);
+    /**
+     * This method will free IP address from IP Pool if IP address in RESERVED state. BLACKLISTED IP can't be free.
+     * @param ipAddressRequest
+     * @return
+     */
+    public String freeIPAddress(IPAddressRequest ipAddressRequest) {
+        Optional<IPAddress> ipAddress = processAllTypeOfIPAddressRequest(ipAddressRequest);
         if(ipAddress.isPresent()) {
             if (ipAddress.get().getResourceState().equalsIgnoreCase(String.valueOf(ResourceState.BLACKLISTED)))
                 throw new IPReservationFailedException("Requested IP Address: "+ipAddress.get().getValue()+ "  is blacklisted. Can't make it available util state of the IP has not been changed.");
@@ -139,39 +149,49 @@ public class IpManagementService {
         return ipAddress.get().getValue();
     }
 
-    public IPAddressReserveResponse getIpInfo(IPAddressReserveRequest ipAddressReserveRequest) {
-        IPAddressReserveResponse ipAddressReserveResponse = new IPAddressReserveResponse();
-        Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressReserveRequest.getIpPoolId());
+    /**
+     * This method will return info of IP Address.
+     * @param ipAddressRequest
+     * @return
+     */
+    public IPAddressResponse getIpInfo(IPAddressRequest ipAddressRequest) {
+        IPAddressResponse ipAddressResponse = new IPAddressResponse();
+        Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressRequest.getIpPoolId());
 
-        validateIPAddressReservationRequest(ipPool, ipAddressReserveRequest);
+        validateIPAddressReservationRequest(ipPool, ipAddressRequest);
         logger.info("find IP Address in table if exist...");
-        Optional<IPAddress> ipAddress = ipAddressRepository.findByValue(ipAddressReserveRequest.getIpAddress().get());
-        ipAddressReserveResponse.setIpPool(ipPool.get());
-        ipAddressReserveResponse.setIpAddress(ipAddress.get());
+        Optional<IPAddress> ipAddress = ipAddressRepository.findByValue(ipAddressRequest.getIpAddress().get());
+        ipAddressResponse.setIpPool(ipPool.get());
+        ipAddressResponse.setIpAddress(ipAddress.get());
 
-        return ipAddressReserveResponse;
+        return ipAddressResponse;
     }
 
-    private Optional<IPAddress> processAllTypeOfIPAddressRequest(IPAddressReserveRequest ipAddressReserveRequest) {
-        Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressReserveRequest.getIpPoolId());
+    /**
+     * This method will
+     * @param ipAddressRequest
+     * @return
+     */
+    private Optional<IPAddress> processAllTypeOfIPAddressRequest(IPAddressRequest ipAddressRequest) {
+        Optional<IPPool> ipPool = ipPoolRepositiory.findById(ipAddressRequest.getIpPoolId());
 
-        validateIPAddressReservationRequest(ipPool, ipAddressReserveRequest);
+        validateIPAddressReservationRequest(ipPool, ipAddressRequest);
         logger.info("find IP Address in table if exist...");
-        Optional<IPAddress> ipAddress = ipAddressRepository.findByValue(ipAddressReserveRequest.getIpAddress().get());
+        Optional<IPAddress> ipAddress = ipAddressRepository.findByValue(ipAddressRequest.getIpAddress().get());
         return ipAddress;
     }
     /**
      * This method will validate ip address reservation request based on multiple criteria.
      * @param ipPool
-     * @param ipAddressReserveRequest
+     * @param ipAddressRequest
      */
-    private final void validateIPAddressReservationRequest(Optional<IPPool> ipPool, IPAddressReserveRequest ipAddressReserveRequest) {
+    private final void validateIPAddressReservationRequest(Optional<IPPool> ipPool, IPAddressRequest ipAddressRequest) {
         if(!ipPool.isPresent())
             throw new ResourceNotFoundException("Requested Pool ID Not Present!");
 
-        if(Objects.nonNull(ipAddressReserveRequest.getNoOfIpAddress())) {
+        if(Objects.nonNull(ipAddressRequest.getNoOfIpAddress())) {
             ipPool.ifPresent(pool -> {
-                if (pool.getTotalCapacity() < ipAddressReserveRequest.getNoOfIpAddress().get()) {
+                if (pool.getTotalCapacity() < ipAddressRequest.getNoOfIpAddress().get()) {
                     throw new IPCapacityOverflowException("Requested No Of IP is greater than available resource!");
                 } else if (pool.getTotalCapacity() <= pool.getUsedCapacity()) {
                     throw new IPCapacityOverflowException("Pool capacity has been overflow. No reservation possible for this pool!");
@@ -179,8 +199,8 @@ public class IpManagementService {
             });
         }
 
-        if (Objects.nonNull(ipAddressReserveRequest.getIpAddress())) {
-            if (!ipManagementServiceUtils.isIPAddressInRange(ipPool.get().getLowerBound(), ipPool.get().getUpperBound(), ipAddressReserveRequest.getIpAddress().get()))
+        if (Objects.nonNull(ipAddressRequest.getIpAddress())) {
+            if (!ipManagementServiceUtils.isIPAddressInRange(ipPool.get().getLowerBound(), ipPool.get().getUpperBound(), ipAddressRequest.getIpAddress().get()))
                 throw new IPReservationFailedException("Provided IP doesn't exist in the given pool id range!");
         }
     }
