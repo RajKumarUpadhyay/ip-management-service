@@ -10,18 +10,21 @@ to FREE/RESERVED/BLACKLIST IP's in the pool.
 # How to use this?
   - Use has need to clone this repo at host machine and start tomcat server.
 
-# Features!
-    This service has provide two operation. Below is the list of service and corresponding the definition.
+# Features
+    This service has provide five operation. Below is the list of service and corresponding the definition.
     
 |  HTTP METHOD | END POINT   |  DESCRIPTION |
 |---|---|---|
-|  GET | http://localhost:8080/ip-mgmt-service/generateAndReserveIPAddress  | This end point will reserve generate IP from given pool  |
+|  POST | http://localhost:8080/ip-mgmt-service/generateAndReserveIPAddress  | This end point will reserve generate IP from given pool  |
 |  PUT | http://localhost:8080/ip-mgmt-service/reserveIPAddress  | This endpoint will reserve IP address |
 |  PUT | http://localhost:8080/ip-mgmt-service/blacklistIPAddress  | This endpoint will blacklist IP in pool if provided IP within range |
 |  PUT | http://localhost:8080/ip-mgmt-service/freeIPAddress  | This end point will free IP from reservation if IP is not blacklisted |
-|  GET | http://localhost:8080/ip-mgmt-service/getIPInfo  | This will return IP Address information |
+|  POST | http://localhost:8080/ip-mgmt-service/getIPInfo  | This will return IP Address information |
+|  GET | http://127.0.01:9001/actuator/health  | This will provide service heath status. |
 
- 
+# Swagger documentation: 
+ User can open below link for more detail information about services and request parameters.
+ http://localhost:8080/swagger-ui.htm
  ### Maintainer 
  Raj K Upadhyay
 
